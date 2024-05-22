@@ -17,6 +17,9 @@
 **/*.dta
 **/*.RData
 **/*.parquet
+**/*.csv
+**/*.xlsx
+**/*.xls
 
 # 2.1. To exclude raw datasets
 # (Not Applicable)
