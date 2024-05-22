@@ -68,10 +68,13 @@ COLS_EXTRACT <- c(
   "조사기준연도", "행정구역시도코드",
   "산업대분류코드", "주사업_산업중분류코드", "주사업_산업소분류코드",
     "주사업_산업세분류코드", "주사업_산업세세분류코드",
-  "생산금액", "부가가치금액", "사업영업비_총금액", "주요생산비",
+  "생산금액", "부가가치금액", "사업영업비_총금액",
     "원재료비", "연료비", "전력비",
     "용수비", "조사_외주가공비", "수선비"
 )
+# Note:
+# "경제총조사" 데이터에 "주요생산비" 변수가 존재하기 않기 때문에, 해당 변수를
+# 제외. 
 
 
 # 2. New names for the columns extracted from the original dataset
@@ -80,7 +83,7 @@ COLS_NEW.NAMES <- c(
   "year", "kcad_level1",
   "ksic_level1", "ksic_level2", "ksic_level3",
     "ksic_level4", "ksic_level5",
-  "output_gross", "value_added", "expense_business", "cost_majorproduction",
+  "output_gross", "value_added", "expense_business",
     "expense_rawmaterial", "expense_fuel", "expense_electricity",
     "expense_water", "fee_outsourcing", "fee_mending"
 )
@@ -97,7 +100,7 @@ COLS_NEW.NAMES <- c(
 # 1. Creating a DT by ingesting .csv files
 # 1.1. Make a list that contains the paths of .csv files that will be ingested
 array_files <- list.files(PATH_DATA_RAW_USE_MMS)
-path_files <- paste(
+array_paths <- paste(
   PATH_DATA_RAW_USE_MMS,
   array_files[str_detect(array_files, "csv$")],
   sep = "/"
@@ -105,7 +108,7 @@ path_files <- paste(
 
 # 1.2. Create a DT by ingesting .csv files
 dt_mms <-
-  lapply(path_files, helper_ingest) %>%
+  lapply(array_paths, helper_ingest) %>%
   rbindlist(., fill = TRUE)
 
 
