@@ -53,6 +53,16 @@ PATH_DATA_INTERMEDIATE_5Y.HISTORY <-
 # 1.2.2.3. For KCAD (Korean Classification of Administrative Districts)
 PATH_DATA_RAW_USE_KCAD <- paste(PATH_DATA_RAW_USE, "KCAD", sep = "/")
 PATH_DATA_INTERMEDIATE_KCAD <- paste(PATH_DATA_INTERMEDIATE, "KCAD", sep = "/")
+# 1.2.2.4. For Mining and Manufacturing Survey
+PATH_DATA_RAW_USE_MMS <-
+  paste(PATH_DATA_RAW_USE, "Mining-and-Manufacturing-Survey", sep = "/")
+PATH_DATA_INTERMEDIATE_MMS <-
+  paste(PATH_DATA_INTERMEDIATE, "Mining-and-Manufacturing-Survey", sep = "/")
+# 1.2.2.5. For Economic Census
+PATH_DATA_RAW_USE_EC <-
+  paste(PATH_DATA_RAW_USE, "Economic-Census", sep = "/")
+PATH_DATA_INTERMEDIATE_EC <-
+  paste(PATH_DATA_INTERMEDIATE, "Economic-Census", sep = "/")
 
 # 1.3. For output
 PATH_OUTPUT <- "03_Output"
@@ -72,10 +82,14 @@ paths <- c(
   PATH_DATA_RAW_USE_KSIC,
   PATH_DATA_RAW_USE_5Y.HISTORY,
   PATH_DATA_RAW_USE_KCAD,
+  PATH_DATA_RAW_USE_MMS,
+  PATH_DATA_RAW_USE_EC,
   PATH_DATA_INTERMEDIATE,
   PATH_DATA_INTERMEDIATE_KSIC,
   PATH_DATA_INTERMEDIATE_5Y.HISTORY,
   PATH_DATA_INTERMEDIATE_KCAD,
+  PATH_DATA_INTERMEDIATE_MMS,
+  PATH_DATA_INTERMEDIATE_EC,
   PATH_DATA_ANALYSIS,
   PATH_OUTPUT,
   PATH_OUTPUT_FIGURE,
@@ -115,6 +129,28 @@ COL.PAL_CUSTOM <-
 # ------------------------------------------------------------------------------
 # Define function(s)
 # ------------------------------------------------------------------------------
+# ------- Function(s) related to data cleansing -------
+# 1. To ingest MDIS dataset(s), which is(are) in .csv format
+helper_ingest <- function(path) {
+  tmp_dt <- 
+    read_csv(
+      path,
+      locale = locale(encoding = "euc-kr"),
+      show_col_types = FALSE,
+      col_types = cols(.default = col_character())
+    ) %>%
+    setDT(.)
+  
+  tmp_year <- tmp_dt[, .N, by = .(조사기준연도)]$조사기준연도
+  tmp_n <- tmp_dt[, .N]
+  tmp_dt[, id := paste(tmp_year, 1:tmp_n, sep = "-")]
+
+  setcolorder(tmp_dt, "id")
+
+  return(tmp_dt)
+}
+
+
 # ------- Function(s) related to regression analysis -------
 # (Not Applicable)
 
