@@ -141,7 +141,9 @@ helper_ingest <- function(path) {
     ) %>%
     setDT(.)
   
-  tmp_year <- tmp_dt[, .N, by = .(조사기준연도)]$조사기준연도
+  tmp_year <- tmp_dt[
+    str_detect(조사기준연도, "\\*", negate = TRUE), .N, by = .(조사기준연도)
+  ]$조사기준연도
   tmp_n <- tmp_dt[, .N]
   tmp_dt[, id := paste(tmp_year, 1:tmp_n, sep = "-")]
 
