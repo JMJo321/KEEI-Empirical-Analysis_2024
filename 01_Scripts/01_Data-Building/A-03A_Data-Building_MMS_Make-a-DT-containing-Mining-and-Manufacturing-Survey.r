@@ -74,7 +74,7 @@ COLS_EXTRACT <- c(
 )
 # Note:
 # "경제총조사" 데이터에 "주요생산비" 변수가 존재하기 않기 때문에, 해당 변수를
-# 제외. 
+# 제외.
 
 
 # 2. New names for the columns extracted from the original dataset
@@ -127,7 +127,9 @@ names(subdt_mms) <- COLS_NEW.NAMES
 # ------- Modify the DT created -------
 # 1. Add data field(s)
 # 1.1. Add a data field showing KSIC(10th) codes
-subdt_mms[, ksic := paste0(ksic_level2, ksic_level3, ksic_level4, ksic_level5)]
+subdt_mms[, ksic := paste0(ksic_level2, ksic_level3, ksic_level4)]
+# Note:
+# "경제총조사"의 경우, 표준산업분류가 Level-4 (세분류)까지만 제공됨.
 
 
 # 2. Conver data field's types
@@ -173,7 +175,7 @@ lapply(
 )
 
 
-# ------- Ingest  -------
+# ------- Export the DT created -------
 # 1. Export in .Rdata format
 save("subdt_mms", file = PATH_TO.SAVE_MMS_RDATA)
 
